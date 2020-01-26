@@ -1,0 +1,80 @@
+<!-- <!DOCTYPE html>
+<html>
+  <head>
+    <title>
+      My First Express App
+    </title>
+  </head>
+  <body>
+    <h1>Prep for prep</h1>
+    <p>Live for life.</p>
+    <form method="POST">
+      <p>Enter your breakfast: <input name="breakfast" /></p>
+      <button type="submit">Submit</button>
+    </form>
+  </body>
+</html> -->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Voting App</title>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-analytics.js"></script>
+
+    <script>
+      // Your web app's Firebase configuration
+      var firebaseConfig = {
+        apiKey: "AIzaSyBqO36AXg7sBHnJjeMLazuYu-0qogwcsjs",
+        authDomain: "quiver-two-8a524.firebaseapp.com",
+        databaseURL: "https://quiver-two-8a524.firebaseio.com",
+        projectId: "quiver-two-8a524",
+        storageBucket: "quiver-two-8a524.appspot.com",
+        messagingSenderId: "1028209628124",
+        appId: "1:1028209628124:web:4769b0ba058305dcc93519",
+        measurementId: "G-J381X3THJ2"
+      };
+      // Initialize Firebase
+      firebase.initializeApp(firebaseConfig);
+      firebase.analytics();
+    </script>
+  </head>
+  <body>
+    <h1>Voting App</h1>
+    <p>Login with Firebase</p>
+    <h3 id="google-displayName"></h3>
+    <img id="google-pic" src="" />
+    <p id="google-email"></p>
+    <button onclick="{signInWithGoogle()}">Sign In With Google</button>
+    <script>
+      function signInWithGoogle() {
+        // Using a redirect.
+        var provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope("profile");
+        provider.addScope("email");
+        firebase
+          .auth()
+          .signInWithPopup(provider)
+          .then(function(result) {
+            // This gives you a Google Access Token.
+            var token = result.credential.accessToken;
+            // The signed-in user info.
+            var user = result.user;
+            // Set the image, p, and h3 to be the
+            // photoURL of my google account
+            // email
+            // and displayName respectively
+            console.log(token);
+            console.log(user);
+          })
+          .catch(e => {
+            console.log(e);
+          });
+      }
+    </script>
+  </body>
+</html>
