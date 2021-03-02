@@ -4,13 +4,17 @@ var bodyParser = require("body-parser");
 
 var admin = require("firebase-admin");
 
-var serviceAccount = require("");
+//This account is no longer valid
+var serviceAccount = require("./quiver-two-8a524-firebase-adminsdk-v74fq-6d37d62cb9.json");
 
 var firebaseAdmin = admin.initializeApp({
   //cert means certify here
   credential: admin.credential.cert(serviceAccount),
-  databaseURL: ""
+  databaseURL: "https://quiver-two-8a524.firebaseio.com"
 });
+
+var database = firebaseAdmin.database()
+
 //create instance of express app
 var app = express();
 
@@ -28,26 +32,36 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 app.use(logger("dev"));
 
-//create authentication middleware
-function isAuthenticated(request, response, next) {
-  //check user is logged in
-  //if they are, attach them to the request object and call next
-  // if they are not, send them to the login page
-  // with  a message saying : "login!"
-}
+app.get("/", function (req, res) {
+  var restaurantsRef = database.ref("/restaurants")
 
-app.get("/", function(req, res) {
-  res.render("home.ejs");
+  restaurantsRef.once("value", function (snapshot) {
+    console.log(snapshot.val())
+    var data = snapshot.val()
+
+    if (!data) {
+      data = {}
+    }
+
+    res.render("home.ejs", { restaurants: data });
+  })
 });
 
-app.get("/homecoming-queen", isAuthenticated, function(request, response) {
-  response.render("homecomingQueen.ejs");
+app.get("/profile/:userId", function (request, response) {
+  var userId = req.params.userId
+
+  var user = firebaseAdmin.getAllUsersData(userId)
+
+  response.render("profile.ejs", { user: user })
+
 });
-app.post("/", function(req, res) {
-  var breakfast = req.body.breakfast;
-  res.render("results.ejs", { data: breakfast });
-});
+
+
+// app.post("/", function (req, res) {
+//   var breakfast = req.body.breakfast;
+//   res.render("results.ejs", { data: breakfast });
+// });
 var port = process.env.PORT || 8080;
-app.listen(port, function() {
+app.listen(port, function () {
   console.log("App runnning on port " + port);
 });
